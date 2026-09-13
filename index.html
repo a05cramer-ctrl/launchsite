@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>$LAUNCHSITE</title>
+<meta name="description" content="LAUNCHSITE — your coin's website in 60 seconds. Pick a template, drop the art, paste the CA, download the zip, drag it onto Vercel. $LAUNCHSITE paired with ETH.">
+<meta property="og:title" content="LAUNCHSITE — your coin's website in 60 seconds.">
+<meta property="og:description" content="Three templates, live stats wired, files are yours. No dev, no server, no lock-in. $LAUNCHSITE · paired with ETH · creator tax routed to holders.">
+<meta property="og:image" content="assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
+<link rel="icon" href="assets/favicon.ico">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="config.js"></script>
+<style>
+:root{--bg:#070709;--bg2:#0d0d11;--bg3:#111218;--line:#1e1f26;--line2:#2a2b34;--ink:#f4f4f6;--mute:#8b8d99;--dim:#5b5d6b;--acc:#3b6dff;--acc2:#7c9bff;--ok:#38d996;--warn:#ffb340;
+  --sans:'Space Grotesk',system-ui,sans-serif;--mono:'Space Mono',ui-monospace,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+html,body{overflow-x:clip;background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+.wrap{width:min(1240px,100% - 40px);margin:0 auto}
+.mono{font-family:var(--mono)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--acc2)}
+h1,h2,h3{font-weight:600;letter-spacing:-.02em;line-height:1.02}
+h2{font-size:clamp(30px,4vw,48px);margin-bottom:14px}
+p.lead{font-size:17px;line-height:1.6;color:#c9cad4;max-width:62ch}
+.grid{display:grid;gap:14px}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:22px}
+.card h3{font-size:18px;margin-bottom:8px}
+.card p{font-size:14px;line-height:1.6;color:var(--mute)}
+.card .n{font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.14em;margin-bottom:12px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:8px;font-weight:600;font-size:14px;border:1px solid var(--line2);background:#121319;transition:transform .15s,background .15s}
+.btn:hover{background:#181a22;transform:translateY(-1px)}
+.btn.p{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.p:hover{background:#4d7bff}
+.btn.g{color:var(--mute)}
+.btn:disabled{opacity:.6;transform:none}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid var(--line2);font-family:var(--mono);font-size:11px;color:var(--mute)}
+.pill i{width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok)}
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(7,7,9,.78);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;gap:22px;height:62px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;letter-spacing:.08em}
+.logo img{width:28px;height:28px;display:block}
+nav .links{display:flex;gap:18px;margin-left:8px;font-size:13px;color:var(--mute)}
+nav .links a:hover{color:var(--ink)}
+nav .right{margin-left:auto;display:flex;gap:10px;align-items:center}
+@media (max-width:900px){ nav .links{display:none} nav .pill{display:none} }
+/* hero */
+.hero{padding:44px 0 26px;position:relative;text-align:center}
+.hero::before{content:"";position:absolute;inset:-260px 0 0 0;background:radial-gradient(50% 45% at 50% 0%,rgba(59,109,255,.2),transparent 70%);pointer-events:none}
+.hero h1{font-size:clamp(36px,5vw,68px);margin:14px auto 14px;max-width:20ch}
+.hero h1 em{font-style:normal;color:var(--acc2)}
+.hero .lead{margin:0 auto}
+.hero .facts{display:flex;gap:30px;flex-wrap:wrap;margin-top:18px;justify-content:center}
+.hero .facts div{font-family:var(--mono);font-size:12px;color:var(--mute)}
+.hero .facts b{display:block;font-size:22px;color:var(--ink);font-family:var(--sans);font-weight:600;letter-spacing:-.02em}
+/* the app */
+.app{margin-top:26px;background:var(--bg2);border:1px solid var(--line2);border-radius:16px;overflow:hidden;box-shadow:0 50px 120px rgba(0,0,0,.65),0 0 0 1px rgba(59,109,255,.08);text-align:left}
+.app .tb{display:flex;align-items:center;gap:8px;height:42px;padding:0 14px;border-bottom:1px solid var(--line);background:#0a0a0e;font-family:var(--mono);font-size:11px;color:var(--dim)}
+.app .tb i{width:10px;height:10px;border-radius:50%;background:#2a2b34}
+.app .tb i:nth-child(1){background:#ff5f57}.app .tb i:nth-child(2){background:#febc2e}.app .tb i:nth-child(3){background:#28c840}
+.app .tb .url{margin-left:10px;background:#111218;border:1px solid var(--line);border-radius:6px;padding:4px 10px;color:var(--mute)}
+.app .tb .st{margin-left:auto;display:flex;gap:8px;align-items:center}
+.app .body{display:grid;grid-template-columns:340px 1fr;min-height:640px}
+@media (max-width:980px){ .app .body{grid-template-columns:1fr} }
+.app .body>*{min-width:0}
+.form{padding:16px;border-right:1px solid var(--line);display:grid;gap:12px;align-content:start;background:#0b0b0f;min-width:0}
+.form *{min-width:0}
+.row2>*,.tpl>*,.arts>*{min-width:0}
+.form .step{display:grid;gap:8px;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--bg2)}
+.form .step h4{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--acc2);display:flex;justify-content:space-between}
+.form .step h4 span{color:var(--dim)}
+label.f{display:grid;gap:5px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase}
+.form input,.form select,.form textarea{width:100%;background:#0a0a0e;border:1px solid var(--line2);border-radius:6px;padding:9px 10px;color:var(--ink);font:500 13px var(--sans);outline:none}
+.form textarea{min-height:72px;resize:vertical;line-height:1.4}
+.form input:focus,.form textarea:focus,.form select:focus{border-color:var(--acc)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tpl{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.tpl button{border:1px solid var(--line2);border-radius:6px;padding:9px 4px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--mute);display:grid;gap:3px}
+.tpl button small{font-size:8px;letter-spacing:.06em;color:var(--dim);text-transform:none}
+.tpl button.on{border-color:var(--acc);color:var(--ink);background:rgba(59,109,255,.12)}
+.arts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.drop{position:relative;border:1px dashed var(--line2);border-radius:8px;padding:10px;text-align:center;font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.08em;cursor:pointer;overflow:hidden;min-height:74px;display:grid;place-items:center}
+.drop:hover{border-color:var(--acc2)}
+.drop input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.drop img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.9}
+.drop b{position:relative;display:block;color:var(--mute);font-size:10px;margin-bottom:2px;background:#000a;padding:2px 6px;border-radius:4px}
+.color{display:flex;gap:6px;align-items:center}
+.color input[type=color]{width:42px;height:34px;padding:2px}
+.swatches{display:flex;gap:4px;flex-wrap:wrap;align-items:center}.swatches input[type=color],.form input[type=color]{width:30px;height:26px;flex:0 0 30px;min-width:30px;padding:2px}.swatches button{width:22px;height:22px;flex:0 0 22px;min-width:22px;border-radius:50%;border:2px solid #0000}.swatches button:hover{border-color:#fff}
+.go{background:var(--acc);color:#fff;border-radius:8px;padding:13px;font-weight:700;font-size:14px;display:flex;justify-content:center;gap:10px;align-items:center}
+.go:hover{background:#4d7bff}
+.log{font-family:var(--mono);font-size:10px;color:var(--dim);display:grid;gap:3px;min-height:52px}
+.log div{display:flex;gap:8px}.log div::before{content:">";color:var(--acc2)}
+.log div.ok{color:var(--ok)}
+/* preview */
+.prev{position:relative;background:#050506;padding:14px;display:grid;grid-template-rows:auto 1fr;gap:10px}
+.prev .top{display:flex;gap:8px;align-items:center;font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.14em}
+.prev .top .dev{display:flex;border:1px solid var(--line2);border-radius:6px;overflow:hidden;margin-left:auto}
+.prev .top .dev button{padding:6px 10px;font-family:var(--mono);font-size:10px;color:var(--mute)}
+.prev .top .dev button.on{background:var(--acc);color:#fff}
+.frame{position:relative;width:100%;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#000}
+.frame iframe{position:absolute;left:0;top:0;border:0;transform-origin:0 0;background:#000}
+.frame.phone{max-width:390px;margin:0 auto;border-radius:28px;border:6px solid #1a1b22}
+/* sections */
+section{padding:76px 0;border-top:1px solid var(--line)}
+.strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg2);margin-top:40px}
+.strip .wrap{display:flex;flex-wrap:wrap}
+.strip div{flex:1;min-width:160px;padding:18px 20px;border-right:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.1em}
+.strip div:last-child{border:0}
+.strip b{display:block;font-family:var(--sans);font-size:24px;color:var(--ink);font-weight:600;letter-spacing:-.02em;margin-top:4px}
+.rules .grid{grid-template-columns:repeat(3,1fr)}
+@media (max-width:900px){ .rules .grid{grid-template-columns:1fr} }
+.tpls .grid{grid-template-columns:repeat(3,1fr)}
+@media (max-width:900px){ .tpls .grid{grid-template-columns:1fr} }
+.tpls .card{padding:0;overflow:hidden}
+.tpls .shot{position:relative;height:220px;border-bottom:1px solid var(--line);overflow:hidden;background:#000}
+.tpls .shot iframe{position:absolute;left:0;top:0;width:1280px;height:800px;border:0;transform-origin:0 0;pointer-events:none}
+.tpls .txt{padding:18px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.tpls .txt small{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.14em;display:block;margin-top:8px}
+.tpls .txt button{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--acc2);white-space:nowrap;padding:6px 0}
+.steps{counter-reset:s;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media (max-width:900px){ .steps{grid-template-columns:1fr 1fr} }
+@media (max-width:560px){ .steps{grid-template-columns:1fr} }
+.steps .card::before{counter-increment:s;content:"0" counter(s);font-family:var(--mono);font-size:11px;color:var(--acc2);letter-spacing:.14em;display:block;margin-bottom:12px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+@media (max-width:900px){ .two{grid-template-columns:1fr} }
+.ledger{font-family:var(--mono);font-size:12px;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.ledger div{display:grid;grid-template-columns:1fr auto;padding:12px 16px;border-bottom:1px solid var(--line);color:var(--mute)}
+.ledger div:last-child{border:0}
+.ledger b{color:var(--ink);font-weight:400}.ledger b.g{color:var(--ok)}
+.ca{display:flex;gap:10px;align-items:center;background:var(--bg2);border:1px solid var(--line2);border-radius:8px;padding:12px 14px;font-family:var(--mono);font-size:12px;margin-top:14px}
+.ca code{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--mute)}
+.ca button{background:var(--acc);color:#fff;border-radius:6px;padding:7px 11px;font-size:11px;font-weight:700}
+.faq details{border-top:1px solid var(--line);padding:16px 0}
+.faq details:last-child{border-bottom:1px solid var(--line)}
+.faq summary{cursor:pointer;font-weight:600;font-size:16px;list-style:none;display:flex;justify-content:space-between;align-items:center}
+.faq summary::after{content:"+";font-family:var(--mono);color:var(--dim)}
+.faq details[open] summary::after{content:"–"}
+.faq p{margin-top:10px;font-size:14px;line-height:1.6;color:var(--mute);max-width:70ch}
+footer{padding:40px 0 60px;border-top:1px solid var(--line);color:var(--mute);font-size:13px}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
+footer .links{display:flex;gap:16px}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#000;padding:10px 16px;border-radius:8px;font-family:var(--mono);font-size:12px;opacity:0;pointer-events:none;z-index:99;max-width:90vw;text-align:center}
+.reveal{opacity:0;transform:translateY(16px)}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <a class="logo" href="#"><img src="assets/mark.png" alt="" width="28" height="28">LAUNCHSITE</a>
+  <div class="links"><a href="#app">Generator</a><a href="#templates">Templates</a><a href="#rules">Rules</a><a href="#token">$LAUNCHSITE</a><a href="#faq">Docs</a><a id="x1" href="https://x.com/LaunchSite_dev" target="_blank" rel="noopener">X</a></div>
+  <div class="right"><span class="pill" id="live"><i></i><span id="livetxt">live stats: waiting for CA</span></span><a class="btn p" href="#app">Open the generator</a></div>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">// a website for every launchpad on robinhood chain</div>
+  <h1>Your coin's website in <em>60 seconds.</em></h1>
+  <p class="lead">Pick a template. Drop the art. Type the name. Download the zip, drag it onto Vercel. Live stats already wired. No dev, no server, no lock-in — the files are yours.</p>
+  <div class="facts"><div><b>3</b>templates</div><div><b>0%</b>platform take</div><div><b>60s</b>art → zip</div><div><b>100%</b>creator tax to holders</div></div>
+
+  <div class="app" id="app">
+    <div class="tb"><i></i><i></i><i></i><span class="url">launchsite.family/generate</span><span class="st"><span class="pill"><i></i><span id="appstate">ready · builds in your browser</span></span></span></div>
+    <div class="body">
+      <div class="form">
+        <div class="step"><h4>01 TEMPLATE <span id="tplnav">single screen · dashboard</span></h4>
+          <div class="tpl"><button class="on" data-t="terminal">TERMINAL<small>dashboard</small></button><button data-t="desktop">DESKTOP<small>fake OS</small></button><button data-t="world">WORLD<small>3D room</small></button></div></div>
+        <div class="step"><h4>02 IDENTITY</h4>
+          <div class="row2"><label class="f">Name<input id="f-name" value="Suitdog" maxlength="20"></label><label class="f">Ticker<input id="f-tick" value="SUITDOG" maxlength="10"></label></div>
+          <div class="row2"><label class="f">Paired with<select id="f-pair"></select></label><label class="f">Accent<div class="color"><input id="f-col" type="color" value="#3b6dff"><div class="swatches" id="sw"></div></div></label></div>
+          <label class="f">One-liner<input id="f-line" value="CEO @ J.P. Morgan. never in the office." maxlength="70"></label>
+          <label class="f">Lore (one line per paragraph)<textarea id="f-lore">born in a kennel. promoted in a boardroom.
+he has never opened a spreadsheet. he has never needed to.
+paired with $JPM because that's the bank he runs.</textarea></label></div>
+        <div class="step"><h4>03 ART <span>optional · demo art if empty</span></h4>
+          <div class="arts"><div class="drop" id="d-pfp"><input type="file" accept="image/*" id="u-pfp"><b>PFP · square</b>click or drop</div><div class="drop" id="d-ban"><input type="file" accept="image/*" id="u-ban"><b>BANNER · 3:1</b>click or drop</div></div></div>
+        <div class="step"><h4>04 LINKS <span>editable later in config.js</span></h4>
+          <div class="row2"><label class="f">X profile<input id="f-x" placeholder="https://x.com/yourcoin"></label><label class="f">Launchpad<select id="f-pad"><option value="pons">Pons (Robinhood Chain)</option><option value="pumpfun">pump.fun (Solana)</option><option value="stonkfun">StonkFun (Solana)</option></select></label></div>
+          <label class="f">Contract address<input id="f-ca" placeholder="paste at launch — leave empty now"></label></div>
+        <button class="go" id="go"><span>Build &amp; download site.zip</span><span class="mono" style="font-size:10px;opacity:.8" id="gosize"></span></button>
+        <div class="log" id="log"><div>waiting. edit anything on the left, the preview follows.</div></div>
+      </div>
+      <div class="prev">
+        <div class="top"><span id="prevlab">PREVIEW · TERMINAL · LIVE</span><button class="mono" id="newtab" style="color:var(--acc2);letter-spacing:.14em;font-size:10px">OPEN IN NEW TAB ↗</button><div class="dev"><button class="on" data-d="desk">DESKTOP</button><button data-d="phone">PHONE</button></div></div>
+        <div class="frame" id="frame"><iframe id="pv" title="preview" sandbox="allow-scripts allow-same-origin allow-popups"></iframe></div>
+      </div>
+    </div>
+  </div>
+</div></header>
+
+<div class="strip"><div class="wrap"><div>builds this session<b id="s-gen">0</b></div><div>templates<b>3</b></div><div>fee to build<b>$0</b></div><div>hosting<b>yours</b></div><div>lock-in<b>none</b></div></div></div>
+
+<section class="tpls" id="templates"><div class="wrap">
+  <div class="eyebrow">// templates</div>
+  <h2>Three templates. Three different sites.</h2>
+  <p class="lead">Not three colours of the same page — three navigation models. Every one ships with live stats, a buy button that follows your pair, a CA bar with copy, and your art cut to size.</p>
+  <div class="grid" style="margin-top:28px">
+    <div class="card reveal"><div class="shot"><iframe data-shot="terminal" title="terminal" sandbox="allow-scripts"></iframe></div><div class="txt"><div><h3>TERMINAL</h3><p>Single screen, no scroll. Stats, lore, how-to-buy and milestones pinned around a hero panel. Live cam slot.</p><small>NAV MODEL · DASHBOARD</small></div><button data-use="terminal">USE →</button></div></div>
+    <div class="card reveal"><div class="shot"><iframe data-shot="desktop" title="desktop" sandbox="allow-scripts"></iframe></div><div class="txt"><div><h3>DESKTOP</h3><p>A fake operating system in your coin's colour. Draggable windows: lore.txt, buy.exe, chart, memes, recycle bin (fud).</p><small>NAV MODEL · WINDOWS</small></div><button data-use="desktop">USE →</button></div></div>
+    <div class="card reveal"><div class="shot"><iframe data-shot="world" title="world" sandbox="allow-scripts"></iframe></div><div class="txt"><div><h3>WORLD</h3><p>A 3D room the mouse looks around in. Your banner on the wall, the character in the middle, live numbers on a screen.</p><small>NAV MODEL · FIRST PERSON</small></div><button data-use="world">USE →</button></div></div>
+  </div>
+</div></section>
+
+<section class="rules" id="rules"><div class="wrap">
+  <div class="eyebrow">// rules</div>
+  <h2>Set once. Hosted by you.</h2>
+  <p class="lead">Every site is a folder: index.html, config.js, your images. It runs anywhere static files run. We never hold it, never host it, can't take it down.</p>
+  <div class="grid" style="margin-top:28px">
+    <div class="card reveal"><div class="n">01 · OUTPUT</div><h3>A zip. Not an account.</h3><p>Files on your disk. Open them, edit them, host them wherever. No login, nothing to migrate off later.</p></div>
+    <div class="card reveal"><div class="n">02 · LIVE DATA</div><h3>Stats wired on export.</h3><p>Market cap, price, volume, buys and sells refresh every 30 seconds from public price APIs. Paste the CA into config.js at launch; the page is live a minute later.</p></div>
+    <div class="card reveal"><div class="n">03 · PRIVATE</div><h3>Nothing uploads.</h3><p>The build runs in your browser. Your art never leaves your machine. There is no server to leak from.</p></div>
+    <div class="card reveal"><div class="n">04 · TAKE</div><h3>0% platform take.</h3><p>Building is free. The product is paid for by the $LAUNCHSITE creator tax, and that tax is routed to $LAUNCHSITE holders, not to us.</p></div>
+    <div class="card reveal"><div class="n">05 · PAIRS</div><h3>Any pair the chain supports.</h3><p>Stocks, ETFs, USDG, ETH. The buy button, the chart link and the "paired with" line follow your pair automatically.</p></div>
+    <div class="card reveal"><div class="n">06 · EDITABLE</div><h3>It's one HTML file.</h3><p>Sections are labelled. Change a line of copy, swap an image, add a section. No build step, no framework.</p></div>
+  </div>
+</div></section>
+
+<section id="how"><div class="wrap">
+  <div class="eyebrow">// how it works</div>
+  <h2>Four inputs. One zip.</h2>
+  <div class="steps" style="margin-top:28px">
+    <div class="card reveal"><h3>Pick a template</h3><p>Terminal, Desktop or World. The preview on the right is the real page, re-rendered as you type.</p></div>
+    <div class="card reveal"><h3>Drop the art</h3><p>A square PFP and a wide banner. Favicons and thumbnails are cut in the browser.</p></div>
+    <div class="card reveal"><h3>Name, ticker, pair, lore</h3><p>Every line of copy on the page re-writes itself around them.</p></div>
+    <div class="card reveal"><h3>Download, drag, launch</h3><p>Drag the folder onto Vercel. Paste the CA into config.js at launch. Done.</p></div>
+  </div>
+</div></section>
+
+<section id="token"><div class="wrap two">
+  <div>
+    <div class="eyebrow">// the token</div>
+    <h2>$LAUNCHSITE, paired with ETH.</h2>
+    <p class="lead">The generator is free. $LAUNCHSITE is how it exists. The creator tax on every trade is routed to holders — the fee-sharing switch is on from launch and only the fee wallet can turn it off. It won't.</p>
+    <div class="ca"><code id="cacode">contract address drops at launch</code><button id="copy">COPY</button></div>
+    <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap"><a class="btn p" id="buy1" href="#" target="_blank" rel="noopener">Buy $LAUNCHSITE</a><a class="btn" id="chart" href="#" target="_blank" rel="noopener">Chart</a><a class="btn" id="x2" href="#" target="_blank" rel="noopener">X</a></div>
+  </div>
+  <div class="ledger reveal">
+    <div><span>supply</span><b>1,000,000,000 · fixed</b></div>
+    <div><span>creator tax</span><b>2% → holders</b></div>
+    <div><span>dev supply</span><b>burnt at launch</b></div>
+    <div><span>market cap</span><b id="k-mc">—</b></div>
+    <div><span>price</span><b id="k-px">—</b></div>
+    <div><span>volume 24h</span><b id="k-vol">—</b></div>
+    <div><span>buys / sells 24h</span><b><span class="g" id="k-b">—</span> / <span id="k-s">—</span></b></div>
+    <div><span>fees paid to holders</span><b class="g">posted on X as receipts</b></div>
+    <div><span>source</span><b id="k-src">waiting for a contract</b></div>
+  </div>
+</div></section>
+
+<section class="faq" id="faq"><div class="wrap">
+  <div class="eyebrow">// docs</div>
+  <h2>Short answers.</h2>
+  <div style="margin-top:20px">
+    <details open><summary>Do you host my site?</summary><p>No. You download a folder and host it yourself — Vercel, Netlify, GitHub Pages, a USB stick. We can't take it down because we never had it.</p></details>
+    <details><summary>What's in the zip?</summary><p>index.html, config.js, assets/pfp.png, assets/banner.png, README.txt. config.js holds the CA, the pair, your X link and the buy link. Change those, the page follows.</p></details>
+    <details><summary>Where do the live numbers come from?</summary><p>Public price APIs (DexScreener, GeckoTerminal fallback), refreshed every 30 seconds in the visitor's browser. No backend, no key, nothing to expire.</p></details>
+    <details><summary>Why is it free?</summary><p>Because $LAUNCHSITE pays for it. The creator tax on $LAUNCHSITE trades is routed to $LAUNCHSITE holders. The people who hold the coin are the people who fund the tool.</p></details>
+    <details><summary>Can I edit the template?</summary><p>It's HTML. Open it. Everything is in one file with the sections labelled.</p></details>
+    <details><summary>Which launchpads?</summary><p>Any that gives you a contract address. The buy button knows Pons, pump.fun and StonkFun; you can override it in config.js.</p></details>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <div><span class="logo" style="font-size:13px"><img src="assets/mark.png" alt="" style="width:18px;height:18px">LAUNCHSITE</span> · a website for every launchpad · <span class="mono" id="foot-ca">CA at launch</span></div>
+  <div class="links"><a id="x3" href="#" target="_blank" rel="noopener">X</a><a href="#faq">Docs</a><a id="comm" href="#" target="_blank" rel="noopener">Community</a></div>
+</div></footer>
+<div id="toast"></div>
+
+<script>
+/* LAUNCHSITE templates — each returns a complete index.html for a coin.
+   o = {name,tick,pair,col,line,lore,x,ca,pad,chain, art:{pfp,banner}}  (art paths or data URLs) */
+const SHARED_JS = (o) => [
+"var CFG=Object.assign({CA:'',CHAIN:'robinhood',PAD:'pons',X:'',BUY:'',CHART:''},window.SITE_CFG||{});",
+"var PADS={pons:function(c){return 'https://ponsfamily.com/launchpad/'+c},pumpfun:function(c){return 'https://pump.fun/coin/'+c},stonkfun:function(c){return 'https://stonkfun.xyz/token/'+c}};",
+"var $=function(s){return document.querySelector(s)}; var $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};",
+"(function(){var ca=CFG.CA; var buy=CFG.BUY||(ca?(PADS[CFG.PAD]||PADS.pons)(ca):'#'); var chart=CFG.CHART||(ca?'https://dexscreener.com/search?q='+ca:'#');",
+" $$('[data-buy]').forEach(function(a){a.href=buy}); $$('[data-chart]').forEach(function(a){a.href=chart}); $$('[data-x]').forEach(function(a){a.href=CFG.X||'#'});",
+" $$('[data-ca]').forEach(function(e){e.textContent=ca||'CA drops at launch'}); })();",
+"function fm(n){return n>=1e9?'$'+(n/1e9).toFixed(2)+'B':n>=1e6?'$'+(n/1e6).toFixed(2)+'M':n>=1e3?'$'+(n/1e3).toFixed(1)+'K':'$'+(n||0).toFixed(0)}",
+"function fp(n){return !n?'—':n>=1?'$'+n.toFixed(4):'$'+n.toPrecision(3)}",
+"function paint(d){ $$('[data-mc]').forEach(function(e){e.textContent=fm(d.mc)}); $$('[data-px]').forEach(function(e){e.textContent=fp(d.px)}); $$('[data-vol]').forEach(function(e){e.textContent=fm(d.vol)}); $$('[data-b]').forEach(function(e){e.textContent=d.b==null?'—':d.b}); $$('[data-s]').forEach(function(e){e.textContent=d.s==null?'—':d.s}); $$('[data-src]').forEach(function(e){e.textContent=d.src+' · '+new Date().toLocaleTimeString()}); }",
+"function dex(ca){return fetch('https://api.dexscreener.com/latest/dex/tokens/'+ca).then(function(r){return r.json()}).then(function(j){var p=(j.pairs||[]).sort(function(a,b){return (b.liquidity&&b.liquidity.usd||0)-(a.liquidity&&a.liquidity.usd||0)})[0]; if(!p) throw 0; return {mc:+(p.marketCap||p.fdv||0),px:+p.priceUsd,vol:+(p.volume&&p.volume.h24||0),b:p.txns&&p.txns.h24&&p.txns.h24.buys,s:p.txns&&p.txns.h24&&p.txns.h24.sells,src:'dexscreener'}})}",
+"function gecko(ca){var net=CFG.CHAIN==='solana'?'solana':'robinhood'; return fetch('https://api.geckoterminal.com/api/v2/networks/'+net+'/tokens/'+ca).then(function(r){return r.json()}).then(function(j){var a=j.data.attributes; return {mc:+(a.market_cap_usd||a.fdv_usd||0),px:+a.price_usd,vol:+(a.volume_usd&&a.volume_usd.h24||0),b:null,s:null,src:'geckoterminal'}})}",
+"function tick(){ if(!CFG.CA) return; dex(CFG.CA).then(paint).catch(function(){ gecko(CFG.CA).then(paint).catch(function(){}) }) }",
+"tick(); setInterval(tick,30000);",
+"var copyBtn=$('[data-copy]'); if(copyBtn) copyBtn.addEventListener('click',function(){ if(!CFG.CA) return; navigator.clipboard.writeText(CFG.CA); copyBtn.textContent='COPIED'; setTimeout(function(){copyBtn.textContent='COPY'},1200); });"
+].join("\n");
+
+const HEAD = (o, extra) => `<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>$${o.tick}</title>
+<meta name="description" content="${o.name} — ${o.line}. $${o.tick} paired with $${o.pair}.">
+<meta property="og:title" content="$${o.tick} — ${o.line}"><meta property="og:image" content="${o.art.banner}"><meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="${o.art.pfp}">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono&display=swap" rel="stylesheet">
+<script src="config.js"><\/script>
+<style>*{box-sizing:border-box;margin:0;padding:0}a{color:inherit;text-decoration:none}button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}${extra}</style></head>`;
+
+const ESC = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+/* ---------- TERMINAL: single-screen dashboard ---------- */
+function tplTerminal(o){
+  const css = `
+:root{--c:${o.col};--bg:#070709;--p:#0d0e14;--l:#22232c;--ink:#f2f2f4;--mute:#8a8c98}
+html,body{height:100%;background:var(--bg);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif;overflow:hidden}
+.mq{height:32px;background:var(--c);color:#000;font:700 12px 'Space Mono',monospace;letter-spacing:.2em;display:flex;align-items:center;overflow:hidden;white-space:nowrap}
+.mq span{display:inline-block;padding-left:100%;animation:mq 18s linear infinite}@keyframes mq{to{transform:translateX(-100%)}}
+.grid{display:grid;grid-template-columns:1fr 1.5fr 1fr;grid-template-rows:1fr auto;gap:12px;height:calc(100% - 32px);padding:12px}
+.col{display:grid;gap:12px;align-content:start}
+.p{background:var(--p);border:1px solid var(--l);border-radius:8px;padding:14px}
+.p h5{font:11px 'Space Mono',monospace;letter-spacing:.2em;color:var(--c);margin-bottom:10px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stats div{background:#000;border:1px solid var(--l);border-radius:6px;padding:8px 10px;font:11px 'Space Mono',monospace;color:var(--mute)}
+.stats b{display:block;font-size:16px;color:#fff;font-family:'Space Grotesk';margin-top:2px}
+.lore p{font-size:13px;line-height:1.55;color:#cfd0d8;margin-bottom:8px}
+.steps{display:grid;gap:6px;font-size:12px;color:#cfd0d8;counter-reset:s}.steps div::before{counter-increment:s;content:counter(s) ". ";color:var(--c);font-family:'Space Mono'}
+.hero{display:grid;place-items:center;text-align:center;gap:14px;background:radial-gradient(60% 50% at 50% 30%,color-mix(in srgb,var(--c) 22%,transparent),transparent 70%),var(--p)}
+.hero img{width:min(46%,260px);aspect-ratio:1;border-radius:50%;border:4px solid var(--c);object-fit:cover;box-shadow:0 20px 60px #000}
+.hero h1{font-size:clamp(26px,3.4vw,44px);line-height:1;letter-spacing:-.02em}.hero h1 em{font-style:normal;color:var(--c)}
+.hero .sub{font:12px 'Space Mono',monospace;color:var(--mute);letter-spacing:.14em}
+.btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.bt{padding:10px 16px;border-radius:6px;border:1px solid var(--l);font-weight:700;font-size:13px;background:#000}.bt.p{background:var(--c);color:#000;border-color:var(--c)}
+.ban{width:100%;aspect-ratio:3/1;object-fit:cover;border-radius:6px;display:block}
+.cam{position:relative}.cam img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:6px;filter:contrast(1.05)}
+.cam .rec{position:absolute;left:10px;top:10px;font:11px 'Space Mono';color:#fff;background:#0009;padding:3px 8px;border-radius:4px}.cam .rec i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#e0342c;margin-right:6px;animation:bl 1s steps(2) infinite}@keyframes bl{50%{opacity:.2}}
+.ms{display:grid;gap:5px;font:11px 'Space Mono';color:var(--mute)}.ms div{display:flex;justify-content:space-between;border-bottom:1px dashed var(--l);padding:4px 0}.ms b{color:#fff;font-weight:400}
+.ca{grid-column:1/-1;display:flex;gap:10px;align-items:center;background:var(--p);border:1px solid var(--l);border-radius:8px;padding:10px 14px;font:12px 'Space Mono',monospace}
+.ca code{flex:1;color:var(--mute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ca button{background:var(--c);color:#000;border-radius:4px;padding:6px 10px;font-weight:700;font-size:11px}
+@media(max-width:900px){html,body{overflow:auto}.grid{grid-template-columns:1fr;height:auto}}`;
+  return HEAD(o,css) + `<body>
+<div class="mq"><span>$${o.tick} · ${ESC(o.line)} · paired with $${o.pair} · $${o.tick} · ${ESC(o.line)} · paired with $${o.pair} · </span></div>
+<div class="grid">
+ <div class="col">
+  <div class="p"><h5>STATS</h5><div class="stats"><div>MCAP<b data-mc>—</b></div><div>PRICE<b data-px>—</b></div><div>VOL 24H<b data-vol>—</b></div><div>BUYS / SELLS<b><span data-b>—</span>/<span data-s>—</span></b></div></div><div style="font:10px 'Space Mono';color:var(--mute);margin-top:8px" data-src>waiting for CA</div></div>
+  <div class="p lore"><h5>THE LORE</h5>${o.lore.split("\n").filter(Boolean).map(l=>`<p>${ESC(l)}</p>`).join("")}</div>
+  <div class="p"><h5>HOW TO BUY</h5><div class="steps"><div>get a wallet</div><div>hold some $${o.pair} on the chain</div><div>paste the CA on the launchpad</div><div>buy. that's it.</div></div></div>
+ </div>
+ <div class="p hero"><img src="${o.art.pfp}" alt=""><h1>WELCOME TO<br><em>${ESC(o.name.toUpperCase())}</em></h1><div class="sub">$${o.tick} · NOW PAIRED WITH $${o.pair}</div><div class="btns"><a class="bt" data-x href="#" target="_blank">X</a><a class="bt" data-x href="#" target="_blank">COMM</a><a class="bt" data-chart href="#" target="_blank">DEX</a><a class="bt p" data-buy href="#" target="_blank">BUY</a></div></div>
+ <div class="col">
+  <div class="p"><h5>BANNER</h5><img class="ban" src="${o.art.banner}" alt=""></div>
+  <div class="p cam"><h5>● LIVE CAM</h5><div style="position:relative"><img src="${o.art.pfp}" alt=""><div class="rec"><i></i>LIVE</div></div></div>
+  <div class="p"><h5>MILESTONES</h5><div class="ms"><div>$10K<b>dex profile</b></div><div>$50K<b>trending</b></div><div>$100K<b>KOLs</b></div><div>$1M<b>billboard</b></div></div></div>
+ </div>
+ <div class="ca"><span style="color:var(--c)">CA</span><code data-ca>CA drops at launch</code><button data-copy>COPY</button></div>
+</div>
+<script>${SHARED_JS(o)}<\/script></body></html>`;
+}
+
+/* ---------- DESKTOP: a fake OS ---------- */
+function tplDesktop(o){
+  const css = `
+:root{--c:${o.col}}
+html,body{height:100%;background:var(--c);font-family:'Space Grotesk',system-ui,sans-serif;color:#111;overflow:hidden}
+.wall{position:fixed;inset:0;background:url("${o.art.banner}") center/cover;opacity:.35;mix-blend-mode:luminosity}
+.ico{position:absolute;width:84px;display:grid;justify-items:center;gap:6px;font:11px 'Space Mono',monospace;color:#fff;text-shadow:0 1px 0 #000;text-align:center;cursor:pointer}
+.ico i{width:44px;height:44px;background:#fff;border:2px solid #111;border-radius:6px;box-shadow:3px 3px 0 #111;display:grid;place-items:center;font-size:20px}
+.win{position:absolute;background:#f4f4f2;border:2px solid #111;box-shadow:6px 6px 0 #111;border-radius:6px;overflow:hidden;min-width:300px;max-width:min(560px,92vw);display:none}
+.win.open{display:block}.win .hd{background:#111;color:#fff;font:12px 'Space Mono',monospace;padding:6px 10px;display:flex;justify-content:space-between;cursor:grab;user-select:none}.win .hd b{cursor:pointer}
+.win .bd{padding:16px;font-size:14px;line-height:1.55}
+.win h2{font-size:22px;margin-bottom:8px}.win h2 em{font-style:normal;color:var(--c);-webkit-text-stroke:.5px #111}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:10px 0}.stats div{border:2px solid #111;padding:8px 10px;font:11px 'Space Mono';background:#fff}.stats b{display:block;font-size:18px;font-family:'Space Grotesk'}
+.bt{display:inline-block;padding:8px 14px;border:2px solid #111;box-shadow:3px 3px 0 #111;background:#fff;font-weight:700;margin:4px 6px 0 0}.bt.p{background:var(--c)}
+.ca{display:flex;gap:8px;align-items:center;border:2px solid #111;background:#fff;padding:8px 10px;font:12px 'Space Mono';margin-top:8px}.ca code{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.task{position:fixed;left:0;right:0;bottom:0;height:40px;background:#111;color:#fff;display:flex;align-items:center;gap:12px;padding:0 12px;font:12px 'Space Mono',monospace}.task .st{background:var(--c);color:#000;padding:5px 10px;font-weight:700}
+.pf{width:72px;height:72px;border-radius:50%;border:3px solid #111;object-fit:cover;float:left;margin:0 12px 6px 0}
+.memes img{width:100%;border:2px solid #111;margin-top:8px}`;
+  const win = (id,title,body,x,y) => `<div class="win" id="${id}" style="left:${x};top:${y}"><div class="hd"><span>${title}</span><b data-close="${id}">✕</b></div><div class="bd">${body}</div></div>`;
+  return HEAD(o,css) + `<body><div class="wall"></div>
+<div class="ico" style="left:18px;top:24px" data-open="w1"><i>📄</i>lore.txt</div>
+<div class="ico" style="left:18px;top:114px" data-open="w2"><i>💸</i>buy.exe</div>
+<div class="ico" style="left:18px;top:204px" data-open="w3"><i>📈</i>chart</div>
+<div class="ico" style="left:18px;top:294px" data-open="w4"><i>🖼</i>memes</div>
+<div class="ico" style="left:18px;top:384px" data-open="w5"><i>🗑</i>fud (bin)</div>
+${win("w1","lore.txt",`<img class="pf" src="${o.art.pfp}" alt=""><h2>${ESC(o.name)} <em>now paired with $${o.pair}</em></h2>${o.lore.split("\n").filter(Boolean).map(l=>`<p>${ESC(l)}</p>`).join("")}<p style="margin-top:8px;font-family:'Space Mono';font-size:11px">${ESC(o.line)}</p>`,"130px","40px")}
+${win("w2","buy.exe",`<h2>How to buy <em>$${o.tick}</em></h2><ol style="padding-left:18px"><li>get a wallet</li><li>hold some $${o.pair}</li><li>paste the CA on the launchpad</li><li>buy. close the window.</li></ol><div class="ca"><span>CA</span><code data-ca>CA drops at launch</code><button data-copy class="bt" style="margin:0;padding:4px 8px">COPY</button></div><a class="bt p" data-buy href="#" target="_blank">BUY $${o.tick}</a><a class="bt" data-x href="#" target="_blank">X</a>`,"200px","120px")}
+${win("w3","chart.exe",`<h2>Live <em>numbers</em></h2><div class="stats"><div>MCAP<b data-mc>—</b></div><div>PRICE<b data-px>—</b></div><div>VOL 24H<b data-vol>—</b></div><div>BUYS/SELLS<b><span data-b>—</span>/<span data-s>—</span></b></div></div><small data-src style="font-family:'Space Mono';font-size:10px">waiting for CA</small><br><a class="bt" data-chart href="#" target="_blank">OPEN DEX</a>`,"260px","200px")}
+${win("w4","memes",`<div class="memes"><img src="${o.art.banner}" alt=""><img src="${o.art.pfp}" alt="" style="width:40%"></div>`,"320px","80px")}
+${win("w5","recycle bin",`<p>fud.txt<br>paperhands.png<br>the_boss.exe</p><p style="margin-top:8px;font-family:'Space Mono';font-size:11px">empty bin? no.</p>`,"380px","260px")}
+<div class="task"><span class="st">▣ START</span><span>$${o.tick}</span><span style="opacity:.6">${ESC(o.line)}</span><span style="margin-left:auto" id="clk"></span></div>
+<script>${SHARED_JS(o)}
+var z=10; $$('[data-open]').forEach(function(i){ i.addEventListener('click',function(){ var w=$('#'+i.dataset.open); w.classList.add('open'); w.style.zIndex=++z; }) });
+$$('[data-close]').forEach(function(b){ b.addEventListener('click',function(){ $('#'+b.dataset.close).classList.remove('open') }) });
+$$('.win .hd').forEach(function(h){ var d=null,w=h.parentElement; h.addEventListener('pointerdown',function(e){ if(e.target.dataset.close) return; d=[e.clientX-w.offsetLeft,e.clientY-w.offsetTop]; w.style.zIndex=++z; h.setPointerCapture(e.pointerId) }); h.addEventListener('pointermove',function(e){ if(!d) return; w.style.left=(e.clientX-d[0])+'px'; w.style.top=(e.clientY-d[1])+'px' }); h.addEventListener('pointerup',function(){d=null}) });
+$('#w1').classList.add('open'); setInterval(function(){ $('#clk').textContent=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) },1000);
+<\/script></body></html>`;
+}
+
+/* ---------- WORLD: a CSS-3D room ---------- */
+function tplWorld(o){
+  const css = `
+:root{--c:${o.col}}
+html,body{height:100%;background:#050507;color:#fff;font-family:'Space Grotesk',system-ui,sans-serif;overflow:hidden}
+.stage{position:fixed;inset:0;perspective:1000px;perspective-origin:50% 50%;overflow:hidden}
+.room{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d;transition:transform .15s ease-out}
+.room>div{position:absolute;transform-style:preserve-3d}
+.back{left:-700px;top:-400px;width:1400px;height:800px;background:#0e0f16 url("${o.art.banner}") center/cover;transform:translateZ(-600px);filter:brightness(.6);box-shadow:inset 0 0 160px #000}
+.floor{left:-700px;top:400px;width:1400px;height:1200px;transform-origin:top;transform:translateZ(-600px) rotateX(90deg);background:repeating-linear-gradient(90deg,rgba(255,255,255,.07) 0 1px,transparent 1px 70px),repeating-linear-gradient(0deg,rgba(255,255,255,.07) 0 1px,transparent 1px 70px),linear-gradient(#0d0d13,#050507)}
+.ceil{left:-700px;top:-1600px;width:1400px;height:1200px;transform-origin:bottom;transform:translateZ(-600px) rotateX(-90deg);background:linear-gradient(#050507,#0b0b10)}
+.lw{left:-700px;top:-400px;width:1200px;height:800px;transform-origin:left;transform:translateZ(-600px) rotateY(-90deg);background:linear-gradient(90deg,#0c0d14,#070709)}
+.rw{left:-500px;top:-400px;width:1200px;height:800px;transform-origin:right;transform:translateZ(-600px) rotateY(90deg);background:linear-gradient(-90deg,#0c0d14,#070709)}
+.glow{left:-300px;top:-300px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--c) 40%,transparent),transparent 65%);transform:translateZ(-590px);filter:blur(16px)}
+.char{left:-130px;top:-110px;width:260px;height:260px;border-radius:50%;border:5px solid var(--c);background:url("${o.art.pfp}") center/cover;box-shadow:0 30px 80px #000;transform:translateZ(-250px);animation:bob 3s ease-in-out infinite}@keyframes bob{50%{transform:translateZ(-250px) translateY(-14px)}}
+.shadow{left:-110px;top:150px;width:220px;height:40px;border-radius:50%;background:radial-gradient(#000c,transparent 70%);transform:translateZ(-250px) rotateX(90deg)}
+.screen{left:230px;top:-300px;width:360px;padding:14px;transform:translateZ(-400px) rotateY(-22deg);background:#000d;border:1px solid var(--c);border-radius:8px;font:12px 'Space Mono',monospace;box-shadow:0 0 40px color-mix(in srgb,var(--c) 30%,transparent)}
+.screen h5{color:var(--c);letter-spacing:.2em;margin-bottom:8px;font-size:11px}.screen div{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #333}
+.sign{left:-590px;top:-300px;width:360px;transform:translateZ(-400px) rotateY(22deg);background:#000d;border:1px solid #333;border-radius:8px;padding:14px;font-size:13px;line-height:1.5;color:#d6d6de}
+.sign h5{color:var(--c);font:11px 'Space Mono';letter-spacing:.2em;margin-bottom:8px}.sign p{margin-bottom:6px}
+.hud{position:fixed;left:16px;top:14px;font:11px 'Space Mono',monospace;color:#bbb;letter-spacing:.14em}.hud b{display:block;color:#fff;font:700 22px 'Space Grotesk';letter-spacing:-.02em}
+.ui{position:fixed;left:0;right:0;bottom:0;padding:16px;display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;background:linear-gradient(transparent,#000c)}
+.ui .title{font-size:clamp(22px,3vw,40px);font-weight:700;letter-spacing:-.02em;line-height:1}.ui .title em{font-style:normal;color:var(--c)}
+.btns{display:flex;gap:8px;flex-wrap:wrap}.bt{padding:10px 16px;border-radius:6px;border:1px solid #333;background:#000a;font-weight:700;font-size:13px}.bt.p{background:var(--c);color:#000;border-color:var(--c)}
+.ca{position:fixed;left:50%;top:14px;transform:translateX(-50%);display:flex;gap:8px;align-items:center;background:#000a;border:1px solid #333;border-radius:6px;padding:6px 10px;font:11px 'Space Mono'}.ca code{max-width:40vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#aaa}.ca button{background:var(--c);color:#000;border-radius:4px;padding:4px 8px;font-weight:700;font-size:10px}
+.gate{position:fixed;inset:0;z-index:9;background:#050507;display:grid;place-items:center;text-align:center;cursor:pointer}.gate h1{font-size:clamp(28px,5vw,64px);letter-spacing:-.02em}.gate h1 em{font-style:normal;color:var(--c)}.gate p{font:12px 'Space Mono';color:#888;letter-spacing:.2em;margin-top:12px}
+@media(max-width:700px){.screen,.sign{display:none}}`;
+  return HEAD(o,css) + `<body>
+<div class="gate" id="gate"><div><h1>ENTER <em>${ESC(o.name.toUpperCase())}</em></h1><p>CLICK · MOUSE LOOKS AROUND</p></div></div>
+<div class="stage"><div class="room" id="room"><div class="back"></div><div class="floor"></div><div class="ceil"></div><div class="lw"></div><div class="rw"></div><div class="glow"></div><div class="shadow"></div><div class="char"></div>
+ <div class="screen"><h5>● LIVE</h5><div><span>MCAP</span><b data-mc>—</b></div><div><span>PRICE</span><b data-px>—</b></div><div><span>VOL 24H</span><b data-vol>—</b></div><div><span>BUYS / SELLS</span><b><span data-b>—</span> / <span data-s>—</span></b></div><div style="border:0;color:#666"><span data-src>waiting for CA</span></div></div>
+ <div class="sign"><h5>THE LORE</h5>${o.lore.split("\n").filter(Boolean).map(l=>`<p>${ESC(l)}</p>`).join("")}</div>
+</div></div>
+<div class="hud">$${o.tick}<b>paired with $${o.pair}</b></div>
+<div class="ca"><span style="color:var(--c)">CA</span><code data-ca>CA drops at launch</code><button data-copy>COPY</button></div>
+<div class="ui"><div class="title">${ESC(o.name.toUpperCase())}<br><em>${ESC(o.line)}</em></div><div class="btns"><a class="bt" data-x href="#" target="_blank">X</a><a class="bt" data-chart href="#" target="_blank">CHART</a><a class="bt p" data-buy href="#" target="_blank">BUY $${o.tick}</a></div></div>
+<script>${SHARED_JS(o)}
+var room=$('#room'); addEventListener('pointermove',function(e){ var x=(e.clientX/innerWidth-.5), y=(e.clientY/innerHeight-.5); room.style.transform='rotateX('+(-y*6)+'deg) rotateY('+(x*16)+'deg)'; });
+$('#gate').addEventListener('click',function(){ this.style.display='none' });
+<\/script></body></html>`;
+}
+
+const TEMPLATES = { terminal:{fn:tplTerminal,name:"TERMINAL",nav:"single screen · dashboard"}, desktop:{fn:tplDesktop,name:"DESKTOP",nav:"fake OS · windows"}, world:{fn:tplWorld,name:"WORLD",nav:"3D room · mouse look"} };
+
+</script>
+<script>
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const CFG=Object.assign({CA:"",CHAIN:"robinhood",PAD:"pons",X:"https://x.com/LaunchSite_dev",BUY:"",CHART:""},window.LAUNCHSITE_CFG||{});
+const PADS={pons:ca=>`https://ponsfamily.com/launchpad/${ca}`,pumpfun:ca=>`https://pump.fun/coin/${ca}`,stonkfun:ca=>`https://stonkfun.xyz/token/${ca}`};
+(function(){ const ca=CFG.CA; const buy=CFG.BUY||(ca?(PADS[CFG.PAD]||PADS.pons)(ca):"#"); const chart=CFG.CHART||(ca?`https://dexscreener.com/search?q=${ca}`:"#");
+  $("#buy1").href=buy; $("#chart").href=chart; ["#x1","#x2","#x3"].forEach(s=>$(s).href=CFG.X||"#"); $("#comm").href=CFG.X?CFG.X+"/with_replies":"#";
+  if(ca){ $("#cacode").textContent=ca; $("#foot-ca").textContent=ca.slice(0,6)+"…"+ca.slice(-4); } })();
+function toast(t){ const e=$("#toast"); e.textContent=t; gsap.killTweensOf(e); gsap.fromTo(e,{opacity:0,y:8},{opacity:1,y:0,duration:.2}); gsap.to(e,{opacity:0,duration:.3,delay:2.2}); }
+$("#copy").addEventListener("click",()=>{ if(!CFG.CA) return toast("contract drops at launch."); navigator.clipboard.writeText(CFG.CA).then(()=>toast("copied.")); });
+
+/* ===== generator ===== */
+const PAIRS=["ETH","USDG","NVDA","MSFT","AAPL","GOOGL","TSLA","AMZN","META","HOOD","GLD","SPY","QQQ","PLTR","COIN","MSTR","AMD","MU","TSM","RDDT","SNAP","COST","DJT","HIMS","LLY","JNJ","PFE","MRNA","RBLX","TTWO","LULU","DELL","RIVN","SNDK","CRCL","BB","MRVL","FIG","USO","WYFI","SKHY","JPM","GPRO","IBM","GME"];
+$("#f-pair").innerHTML=PAIRS.map(p=>`<option ${p==="JPM"?"selected":""}>${p}</option>`).join("");
+const SW=["#3b6dff","#38d996","#ffb340","#e0342c","#f2b400","#8b5cf6","#ff5fa2","#00c2ff","#ffffff"]; $("#sw").innerHTML=SW.map(c=>`<button style="background:${c}" data-c="${c}" title="${c}"></button>`).join("");
+$$("#sw button").forEach(b=>b.addEventListener("click",()=>{ $("#f-col").value=b.dataset.c; schedule(); }));
+let tpl="terminal", art={pfp:null,banner:null}, builds=0, dev="desk";
+function genPfp(o){ const c=document.createElement("canvas"); c.width=c.height=512; const g=c.getContext("2d"); g.fillStyle="#0b0b0f"; g.fillRect(0,0,512,512); g.fillStyle=o.col; g.beginPath(); g.arc(256,256,200,0,7); g.fill(); g.fillStyle="#000"; g.font="700 230px Space Grotesk, Arial"; g.textAlign="center"; g.textBaseline="middle"; g.fillText((o.tick[0]||"?"),256,270); return c.toDataURL("image/png"); }
+function genBanner(o){ const c=document.createElement("canvas"); c.width=1500; c.height=500; const g=c.getContext("2d"); const gr=g.createLinearGradient(0,0,1500,500); gr.addColorStop(0,"#0b0b0f"); gr.addColorStop(1,o.col); g.fillStyle=gr; g.fillRect(0,0,1500,500); g.strokeStyle="rgba(255,255,255,.08)"; for(let x=0;x<1500;x+=50){ g.beginPath(); g.moveTo(x,0); g.lineTo(x,500); g.stroke(); } g.fillStyle="#fff"; g.font="700 120px Space Grotesk, Arial"; g.fillText(o.name.toUpperCase(),70,300); g.font="32px Space Mono, monospace"; g.fillStyle="rgba(255,255,255,.7)"; g.fillText("$"+o.tick+" · paired with $"+o.pair,74,370); return c.toDataURL("image/png"); }
+function opts(forZip){ const o={name:$("#f-name").value.trim()||"Coin",tick:($("#f-tick").value||"COIN").toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,10)||"COIN",pair:$("#f-pair").value,col:$("#f-col").value,line:$("#f-line").value.trim()||"now paired with $"+$("#f-pair").value,lore:$("#f-lore").value.trim()||"lore goes here.",x:$("#f-x").value.trim(),ca:$("#f-ca").value.trim(),pad:$("#f-pad").value};
+  o.chain=o.pad==="pons"?"robinhood":"solana"; o.art=forZip?{pfp:"assets/pfp.png",banner:"assets/banner.png"}:{pfp:art.pfp||genPfp(o),banner:art.banner||genBanner(o)}; return o; }
+function cfgJS(o){ return `// ${o.name} site config — edit this file on GitHub at each step, Vercel redeploys in ~1 min.\nwindow.SITE_CFG = {\n  CA:    ${JSON.stringify(o.ca)},   // contract address\n  CHAIN: ${JSON.stringify(o.chain)},\n  PAD:   ${JSON.stringify(o.pad)},\n  X:     ${JSON.stringify(o.x)},\n  BUY:   "",   // optional: override the buy link\n  CHART: ""    // optional: override the chart link\n};\n`; }
+function pageHTML(o,inlineCfg){ let h=TEMPLATES[tpl].fn(o); if(inlineCfg) h=h.replace('<script src="config.js"><\/script>',"<script>"+cfgJS(o)+"<\/script>"); return h; }
+let tmr=null; function schedule(){ clearTimeout(tmr); tmr=setTimeout(render,220); }
+function render(){ const o=opts(false); $("#pv").srcdoc=pageHTML(o,true); $("#prevlab").textContent="PREVIEW · "+TEMPLATES[tpl].name+" · LIVE"; $("#tplnav").textContent=TEMPLATES[tpl].nav; fit(); }
+function fit(){ const f=$("#frame"), ifr=$("#pv"); const W=dev==="desk"?1280:390, H=dev==="desk"?800:760; const fw=f.clientWidth; const s=fw/W; f.style.height=(H*s)+"px"; ifr.style.width=W+"px"; ifr.style.height=H+"px"; ifr.style.transform=`scale(${s})`; ifr.style.left="0px"; ifr.style.top="0px"; }
+addEventListener("resize",fit);
+$$(".tpl button").forEach(b=>b.addEventListener("click",()=>{ $$(".tpl button").forEach(x=>x.classList.remove("on")); b.classList.add("on"); tpl=b.dataset.t; render(); }));
+$$("[data-use]").forEach(b=>b.addEventListener("click",()=>{ $$(".tpl button").forEach(x=>x.classList.toggle("on",x.dataset.t===b.dataset.use)); tpl=b.dataset.use; render(); location.hash="#app"; }));
+$$(".prev .dev button").forEach(b=>b.addEventListener("click",()=>{ $$(".prev .dev button").forEach(x=>x.classList.remove("on")); b.classList.add("on"); dev=b.dataset.d; $("#frame").classList.toggle("phone",dev==="phone"); fit(); }));
+["#f-name","#f-tick","#f-pair","#f-col","#f-line","#f-lore","#f-x","#f-ca","#f-pad"].forEach(s=>$(s).addEventListener("input",schedule));
+function readImg(file,cb){ const r=new FileReader(); r.onload=()=>{ const img=new Image(); img.onload=()=>cb(img); img.src=r.result; }; r.readAsDataURL(file); }
+function cutSquare(img){ const s=Math.min(img.width,img.height), c=document.createElement("canvas"); c.width=c.height=800; c.getContext("2d").drawImage(img,(img.width-s)/2,(img.height-s)/2,s,s,0,0,800,800); return c.toDataURL("image/png"); }
+function cutBanner(img){ const c=document.createElement("canvas"); c.width=1500; c.height=500; const r=img.width/img.height; let sw=img.width, sh=img.height; if(r>3){ sw=img.height*3; } else { sh=img.width/3; } c.getContext("2d").drawImage(img,(img.width-sw)/2,(img.height-sh)/2,sw,sh,0,0,1500,500); return c.toDataURL("image/png"); }
+$("#u-pfp").addEventListener("change",e=>{ const f=e.target.files[0]; if(!f) return; readImg(f,img=>{ art.pfp=cutSquare(img); $("#d-pfp").insertAdjacentHTML("afterbegin",`<img src="${art.pfp}">`); log("pfp cut to 800×800"); render(); }); });
+$("#u-ban").addEventListener("change",e=>{ const f=e.target.files[0]; if(!f) return; readImg(f,img=>{ art.banner=cutBanner(img); $("#d-ban").insertAdjacentHTML("afterbegin",`<img src="${art.banner}">`); log("banner cut to 1500×500"); render(); }); });
+function log(t,ok){ const l=$("#log"); const d=document.createElement("div"); d.textContent=t; if(ok) d.className="ok"; l.appendChild(d); while(l.children.length>5) l.firstChild.remove(); }
+function b64toBlob(u){ const [h,b]=u.split(","); const bin=atob(b); const a=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) a[i]=bin.charCodeAt(i); return new Blob([a],{type:h.match(/data:([^;]+)/)[1]}); }
+$("#go").addEventListener("click",async()=>{ const g=$("#go"); g.disabled=true; $("#appstate").textContent="building…"; const o=opts(true), oPrev=opts(false);
+  const steps=[["writing index.html ("+TEMPLATES[tpl].name.toLowerCase()+")",()=>{}],["writing config.js",()=>{}],["cutting pfp.png 800² + favicon",()=>{}],["cutting banner.png 1500×500",()=>{}],["wiring live stats",()=>{}],["zipping",()=>{}]];
+  for(const [t] of steps){ log(t); await new Promise(r=>setTimeout(r,180)); }
+  try{ const zip=new JSZip(); const root=zip.folder(o.tick.toLowerCase()+"-site"); root.file("index.html",pageHTML(o,false)); root.file("config.js",cfgJS(o));
+    root.file("README.txt",`${o.name} — site built with LAUNCHSITE\n\n1. Drag this folder onto vercel.com/new (framework: Other) — or push it to a GitHub repo and import.\n2. At launch: open config.js, paste the CA into CA: "", commit. Live in ~1 min.\n3. Edit index.html freely — it's one file, sections are labelled.\n\nLive stats: DexScreener with GeckoTerminal fallback, every 30s, in the visitor's browser.\n`);
+    const as=root.folder("assets"); as.file("pfp.png",b64toBlob(oPrev.art.pfp)); as.file("banner.png",b64toBlob(oPrev.art.banner));
+    const blob=await zip.generateAsync({type:"blob"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=o.tick.toLowerCase()+"-site.zip"; document.body.appendChild(a); a.click(); a.remove();
+    builds++; $("#s-gen").textContent=builds; $("#gosize").textContent=(blob.size/1024).toFixed(0)+" KB"; log("done · "+o.tick.toLowerCase()+"-site.zip · "+(blob.size/1024).toFixed(0)+" KB",true); toast("site.zip built. drag the folder onto vercel.com/new.");
+  }catch(e){ log("build failed: "+e.message); toast("build failed — "+e.message); }
+  g.disabled=false; $("#appstate").textContent="ready · builds in your browser"; });
+$("#newtab").addEventListener("click",()=>{ const o=opts(false); const blob=new Blob([pageHTML(o,true)],{type:"text/html"}); const w=open(URL.createObjectURL(blob),"_blank"); if(!w) toast("popup blocked — allow popups for this site."); });
+/* template gallery: real pages */
+const DEMO=[{t:"terminal",name:"Suitdog",tick:"SUITDOG",pair:"JPM",col:"#3b6dff",line:"CEO @ J.P. Morgan. never in the office."},{t:"desktop",name:"Windogs",tick:"WINDOGS",pair:"MSFT",col:"#38d996",line:"much desktop. very woof."},{t:"world",name:"Bigfoot",tick:"BIGFOOT",pair:"GPRO",col:"#ffb340",line:"the only guy who's never been in focus."}];
+$$(".tpls .shot iframe").forEach(f=>{ const d=DEMO.find(x=>x.t===f.dataset.shot); const o=Object.assign({lore:"line one of the lore.\nline two of the lore.",x:"",ca:"",pad:"pons",chain:"robinhood"},d); o.art={pfp:genPfp(o),banner:genBanner(o)}; let h=TEMPLATES[d.t].fn(o).replace('<script src="config.js"><\/script>',""); f.srcdoc=h; });
+function fitShots(){ $$(".tpls .shot").forEach(s=>{ const ifr=$("iframe",s); ifr.style.transform=`scale(${s.clientWidth/1280})`; }); } addEventListener("resize",fitShots); fitShots();
+render();
+
+/* ===== live data (this page) ===== */
+const fm=n=>n>=1e9?"$"+(n/1e9).toFixed(2)+"B":n>=1e6?"$"+(n/1e6).toFixed(2)+"M":n>=1e3?"$"+(n/1e3).toFixed(1)+"K":"$"+(n||0).toFixed(0);
+const fp=n=>!n?"—":n>=1?"$"+n.toFixed(4):"$"+n.toPrecision(3);
+function paint(d){ $("#k-mc").textContent=fm(d.mc); $("#k-px").textContent=fp(d.px); $("#k-vol").textContent=fm(d.vol); $("#k-b").textContent=d.b??"—"; $("#k-s").textContent=d.s??"—"; $("#k-src").textContent=d.src+" · "+new Date().toLocaleTimeString(); $("#livetxt").textContent="live · "+fm(d.mc)+" mcap"; }
+async function dex(ca){ const r=await fetch(`https://api.dexscreener.com/latest/dex/tokens/${ca}`); const j=await r.json(); const p=(j.pairs||[]).sort((a,b)=>(b.liquidity?.usd||0)-(a.liquidity?.usd||0))[0]; if(!p) throw 0; return {mc:+(p.marketCap||p.fdv||0),px:+p.priceUsd,vol:+(p.volume?.h24||0),b:p.txns?.h24?.buys,s:p.txns?.h24?.sells,src:"dexscreener"}; }
+async function gecko(ca){ const net=CFG.CHAIN==="solana"?"solana":"robinhood"; const r=await fetch(`https://api.geckoterminal.com/api/v2/networks/${net}/tokens/${ca}`); const j=await r.json(); const a=j.data.attributes; return {mc:+(a.market_cap_usd||a.fdv_usd||0),px:+a.price_usd,vol:+(a.volume_usd?.h24||0),b:null,s:null,src:"geckoterminal"}; }
+async function tick(){ if(!CFG.CA) return; try{ paint(await dex(CFG.CA)); }catch(e){ try{ paint(await gecko(CFG.CA)); }catch(e2){} } }
+tick(); setInterval(tick,30000);
+const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ gsap.to(e.target,{opacity:1,y:0,duration:.6,ease:"power2.out"}); io.unobserve(e.target); } }),{threshold:.12});
+$$(".reveal").forEach(e=>io.observe(e));
+</script>
+</body>
+</html>
